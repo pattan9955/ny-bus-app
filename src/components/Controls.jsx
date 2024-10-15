@@ -4,14 +4,9 @@ import { BusAppContext } from "./BusAppContextProvider";
 import RadioButton from "./RadioButton";
 import Select from "react-select";
 
-export default function Controls() {
+export default function Controls({options}) {
 	const { selectedMode, target, setSelectedMode, setTarget } =
 		useContext(BusAppContext);
-
-    const options = [
-        { label: "xdd1", value: "xdd1" },
-        { label: "xdd2", value: "xdd2" }
-    ];
 
 	return (
 		<div className="my-9 pb-10 mx-auto">
@@ -19,8 +14,10 @@ export default function Controls() {
 				<RadioButton labelName="xdd" value="xdd" />
 				<RadioButton labelName="xdd2" value="xdd2" />
 				<Select
+                    className="w-64"
                     defaultValue={target}
-                    onChange={setTarget}
+                    placeholder="Choose a target..."
+                    onChange={({value}) => setTarget(value)}
                     options={options}
                     styles={{
                         menu: (baseStyles, state) => ({
@@ -28,7 +25,6 @@ export default function Controls() {
                             'z-index': 1000
                         })
                     }}
-                    menuIsOpen={true}
 				/>
 			</form>
 		</div>
