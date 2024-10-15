@@ -4,15 +4,13 @@ import Controls from "./components/Controls";
 import BusAppContextProvider, {
 	BusAppContext,
 } from "./components/BusAppContextProvider";
-
+import { API_BASE_URL } from "./commons.jsx";
 
 function App() {
 	const { target, selectedMode } = useContext(BusAppContext);
-  // const [] = useState();
+	// const [] = useState();
 
-  useEffect(() => async function() {
-
-  }, [])
+	useEffect(() => async function () {}, []);
 
 	const options = [
 		{ label: "xdd1", value: "xdd1" },

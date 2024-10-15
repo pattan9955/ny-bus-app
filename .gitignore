@@ -11,6 +11,7 @@ node_modules
 dist
 dist-ssr
 *.local
+commons.jsx
 
 # Editor directories and files
 .vscode/*
