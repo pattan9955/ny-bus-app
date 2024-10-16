@@ -4,29 +4,75 @@ import Controls from "./components/Controls";
 import BusAppContextProvider, {
 	BusAppContext,
 } from "./components/BusAppContextProvider";
-import { API_BASE_URL } from "./commons.jsx";
+import { API_BASE_URL, READY } from "./commons.jsx";
 
 function App() {
-	const { target, selectedMode } = useContext(BusAppContext);
-	// const [] = useState();
+	const [isStartingUp, setIsStartingUp] = useState(false);
 
-	useEffect(() => async function () {}, []);
+	useEffect(() => {
+		console.log("readying");
+		setIsStartingUp(true);
 
-	const options = [
-		{ label: "xdd1", value: "xdd1" },
-		{ label: "xdd2", value: "xdd2" },
-		{ label: "xdd3", value: "xdd3" },
-		{ label: "xdd4", value: "xdd4" },
-		{ label: "xdd5", value: "xdd5" },
-		{ label: "xdd6", value: "xdd6" },
-	];
+		const checkReadyState = () => {
+			fetch(`${API_BASE_URL + READY}`)
+				.then(response => {
+					if (!response.ok) {
+						throw new Error("An error occurred while readying the app.");
+					}
+					return response.json();
+				})
+				.then(response => {
+					if (response.status === "Ready") {
+						setIsStartingUp(false);
+					} else {
+						setTimeout(checkReadyState, 1000);
+					}
+				})
+				.catch(error => {
+					console.log(error);
+					setIsStartingUp(false);
+				})
+		};
+
+		checkReadyState();
+	}, []);
+
+	// Startup loop to check API readiness, runs once
+	useEffect(
+		() =>
+			async function () {
+				console.log("readying");
+				try {
+					setIsStartingUp(true);
+					while (true) {
+						const response = await fetch(`${API_BASE_URL + READY}`);
+						if (!response.ok) {
+							throw new Error(
+								"An error occurred while readying the app."
+							);
+						}
+						const respData = await response.json();
+						if (respData.status === "Ready") {
+							break;
+						}
+					}
+					setIsStartingUp(false);
+				} catch (error) {
+					// error handling
+				}
+			},
+		[]
+	);
 
 	return (
 		<BusAppContextProvider>
-			<div className="flex flex-col w-svh h-svh">
-				<Controls options={options} />
-				<MapView />
-			</div>
+			{isStartingUp && <h1>Starting up...</h1>}
+			{!isStartingUp && (
+				<div className="flex flex-col w-svh h-svh">
+					<Controls />
+					<MapView />
+				</div>
+			)}
 		</BusAppContextProvider>
 	);
 }
