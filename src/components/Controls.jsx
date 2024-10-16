@@ -34,42 +34,42 @@ export default function Controls() {
 					: "An error occured while fetching line names.";
 
 			fetch(url)
-				.then((res) => res.json())
+				.then((res) => {
+					if (!res.ok) {
+						throw new Error(errorMsg);
+					}
+					return res.json();
+				})
 				.then((res) => {
 					const opts = res.map((refName) => ({
 						label: refName,
 						value: refName,
 					}));
 					setOptions([...opts]);
+				})
+				.catch((err) => {
+					console.error(err);
 				});
-
-			// try {
-			// 	response = await fetch(url);
-			// 	if (!response.ok) {
-			// 		throw new Error(errorMsg);
-			// 	}
-			// 	respData = await response.json();
-			// 	const opts = respData.map((refName) => ({
-			// 		label: refName,
-			// 		value: refName,
-			// 	}));
-			// 	setOptions([...opts]);
-			// } catch (error) {
-			// 	// error handling
-			// }
 		}
 	}, [selectedMode]);
 
 	return (
 		<div className="my-9 pb-10 mx-auto">
-			<form className="w-full h-full">
-				<RadioButton
-					labelName="By Vehicle Reference"
-					value={VEH_REF_MODE}
-				/>
-				<RadioButton labelName="By Line Name" value={LINE_NAME_MODE} />
+			<form className="w-full h-full bg-slate-400 px-5 py-3 rounded-md">
+				<div className="flex flex-row">
+					<RadioButton
+						className="mx-2"
+						labelName="By Vehicle Reference"
+						value={VEH_REF_MODE}
+					/>
+					<RadioButton
+						className="mx-2"
+						labelName="By Line Name"
+						value={LINE_NAME_MODE}
+					/>
+				</div>
 				<Select
-					className="w-64"
+					className="w-full"
 					defaultValue={target}
 					placeholder="Choose a target..."
 					onChange={(event) =>
@@ -84,6 +84,9 @@ export default function Controls() {
 						}),
 					}}
 				/>
+				<button className="bg-slate-300 mt-2 px-3 rounded-md">
+					Query
+				</button>
 			</form>
 		</div>
 	);

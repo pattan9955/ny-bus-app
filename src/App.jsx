@@ -37,33 +37,6 @@ function App() {
 		checkReadyState();
 	}, []);
 
-	// Startup loop to check API readiness, runs once
-	useEffect(
-		() =>
-			async function () {
-				console.log("readying");
-				try {
-					setIsStartingUp(true);
-					while (true) {
-						const response = await fetch(`${API_BASE_URL + READY}`);
-						if (!response.ok) {
-							throw new Error(
-								"An error occurred while readying the app."
-							);
-						}
-						const respData = await response.json();
-						if (respData.status === "Ready") {
-							break;
-						}
-					}
-					setIsStartingUp(false);
-				} catch (error) {
-					// error handling
-				}
-			},
-		[]
-	);
-
 	return (
 		<BusAppContextProvider>
 			{isStartingUp && <h1>Starting up...</h1>}
