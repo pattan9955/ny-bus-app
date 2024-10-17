@@ -18,10 +18,11 @@ export default function Controls() {
 		selectedMode,
 		target,
 		options,
-		geoJsonData,
+		isLoading,
 		setOptions,
 		setTarget,
 		setGeoJsonData,
+		setIsLoading
 	} = useContext(BusAppContext);
 
 	const handleQuery = async (event) => {
@@ -35,6 +36,7 @@ export default function Controls() {
 		}`;
 
 		try {
+			setIsLoading(true);
 			const response = await fetch(url);
 			if (!response.ok) {
 				throw new Error("Error occurred while fetching query results.");
@@ -42,17 +44,19 @@ export default function Controls() {
 			const respData = await response.json();
 			console.log(respData);
 			setGeoJsonData(respData);
+			setIsLoading(false);
 		} catch (error) {
 			console.log(error);
+			setIsLoading(false);
 		}
 	};
 
 	// Fetch new options based on value of selectedMode
 	useEffect(() => {
-		console.log("Fetching options effect");
 		if (!selectedMode) {
 			return;
 		} else {
+			setIsLoading(true);
 			const url =
 				selectedMode === VEH_REF_MODE
 					? `${API_BASE_URL + VEH_REF}`
@@ -78,12 +82,16 @@ export default function Controls() {
 						}))
 						.sort((a, b) => a.value.localeCompare(b.value));
 					setOptions([...opts]);
+					setIsLoading(false);
 				})
 				.catch((err) => {
+					setIsLoading(false);
 					console.error(err);
 				});
 		}
 	}, [selectedMode]);
+
+	console.log("controls rendered");
 
 	return (
 		<div className="my-9 pb-10 mx-auto">
@@ -109,6 +117,7 @@ export default function Controls() {
 					}
 					options={options}
 					isClearable={true}
+					isLoading={isLoading}
 					styles={{
 						menu: (baseStyles, state) => ({
 							...baseStyles,

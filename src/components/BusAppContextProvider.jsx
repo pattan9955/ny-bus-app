@@ -7,11 +7,15 @@ export const BusAppContext = createContext({
 	target: "",
 	geoJsonData: null,
 	mapCenter: null,
+	isLoading: false,
+	errMsg: null,
 	setSelectedMode: () => {},
 	setTarget: () => {},
 	setOptions: () => {},
 	setGeoJsonData: () => {},
-	setMapCenter: () => {}
+	setMapCenter: () => {},
+	setIsLoading: () => {},
+	setErrMsg: () => {}
 });
 
 export default function BusAppContextProvider({ children }) {
@@ -20,6 +24,8 @@ export default function BusAppContextProvider({ children }) {
 	const [options, setOptions] = useState([]);
 	const [geoJsonData, setGeoJsonData] = useState(null);
 	const [mapCenter, setMapCenter] = useState(NEW_YORK_COORDS);
+	const [errMsg, setErrMsg] = useState(null);
+	const [isLoading, setIsLoading] = useState(false);
 
 	return (
 		<BusAppContext.Provider
@@ -29,11 +35,15 @@ export default function BusAppContextProvider({ children }) {
 				options: options,
 				geoJsonData: geoJsonData,
 				mapCenter: mapCenter,
+				isLoading: isLoading,
+				errMsg: errMsg,
 				setSelectedMode: setSelectedMode,
                 setTarget: setTarget,
 				setOptions: setOptions,
 				setGeoJsonData: setGeoJsonData,
-				setMapCenter: setMapCenter
+				setMapCenter: setMapCenter,
+				setIsLoading: setIsLoading,
+				setErrMsg: setErrMsg
 			}}
 		>
 			{children}
