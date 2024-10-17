@@ -10,20 +10,20 @@ export const appStatusSlice = createSlice({
 		},
 	},
 	reducers: {
-		toggleIsLoading: (state) => {
-            state.value.isLoading = !(state.value.isLoading);
+		updateIsLoading: (state, action) => {
+            state.value.isLoading = action.payload;
         },
-        toggleIsStartingUp: (state) => {
-            state.value.isStartingUp = !(state.value.isStartingUp);
+        updateIsStartingUp: (state, action) => {
+            state.value.isStartingUp = action.payload;
         },
-        setErrMsg: (state, action) => {
+        updateErrMsg: (state, action) => {
             state.value.errMsg = action.payload;
         }
 	},
 });
 
 // Action Creators
-export const { toggleIsLoading, toggleIsStartingUp, setErrMsg } =
+export const { updateIsLoading, updateIsStartingUp, updateErrMsg } =
 	appStatusSlice.actions;
 
 // Reducer function

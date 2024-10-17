@@ -1,14 +1,15 @@
-import { useContext } from "react";
 import { MapContainer } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css";
 import "leaflet-defaulticon-compatibility";
-import { BusAppContext } from "./BusAppContextProvider";
 import MapItem from "./MapItem";
+import { useSelector } from "react-redux";
+import { selectGeoJsonData, selectMapCenter } from "../store/selectors";
 
 const MapView = () => {
 	console.log("Map rendering...");
-	const { geoJsonData, mapCenter } = useContext(BusAppContext);
+	const geoJsonData = useSelector(selectGeoJsonData);
+	const mapCenter = useSelector(selectMapCenter);
 	
 	return (
 		<div className="flex-grow">

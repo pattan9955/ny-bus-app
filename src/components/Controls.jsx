@@ -1,5 +1,4 @@
-import { useContext, useEffect } from "react";
-import { BusAppContext } from "./BusAppContextProvider";
+import { useEffect } from "react";
 
 import RadioButton from "./RadioButton";
 import Select from "react-select";
@@ -12,18 +11,20 @@ import {
 	BUS_TRIP_BY_VEH_REF,
 	BUS_TRIP_BY_LINE_NAME,
 } from "../commons";
+import { useDispatch, useSelector } from "react-redux";
+import { selectIsLoading, selectOptions, selectSelectedMode, selectTarget } from "../store/selectors";
+import { updateOptions, updateTarget } from "../features/queryParamSlice";
+import { updateGeoJsonData } from "../features/mapParamSlice";
+import { updateErrMsg, updateIsLoading } from "../features/appStatusSlice";
+
 
 export default function Controls() {
-	const {
-		selectedMode,
-		target,
-		options,
-		isLoading,
-		setOptions,
-		setTarget,
-		setGeoJsonData,
-		setIsLoading
-	} = useContext(BusAppContext);
+	const selectedMode = useSelector(selectSelectedMode);
+	const target = useSelector(selectTarget);
+	const options = useSelector(selectOptions);
+	const isLoading = useSelector(selectIsLoading);
+
+	const dispatch = useDispatch();
 
 	const handleQuery = async (event) => {
 		event.preventDefault();
@@ -36,18 +37,21 @@ export default function Controls() {
 		}`;
 
 		try {
-			setIsLoading(true);
+			dispatch(updateIsLoading(true));
+
 			const response = await fetch(url);
 			if (!response.ok) {
 				throw new Error("Error occurred while fetching query results.");
 			}
 			const respData = await response.json();
 			console.log(respData);
-			setGeoJsonData(respData);
-			setIsLoading(false);
+
+			dispatch(updateGeoJsonData(respData));
+			dispatch(updateIsLoading(false));
+
 		} catch (error) {
 			console.log(error);
-			setIsLoading(false);
+			dispatch(updateIsLoading(false));
 		}
 	};
 
@@ -56,7 +60,7 @@ export default function Controls() {
 		if (!selectedMode) {
 			return;
 		} else {
-			setIsLoading(true);
+			dispatch(updateIsLoading(true));
 			const url =
 				selectedMode === VEH_REF_MODE
 					? `${API_BASE_URL + VEH_REF}`
@@ -81,11 +85,12 @@ export default function Controls() {
 							value: refName,
 						}))
 						.sort((a, b) => a.value.localeCompare(b.value));
-					setOptions([...opts]);
-					setIsLoading(false);
+
+					dispatch(updateOptions(opts));
+					dispatch(updateIsLoading(false));
 				})
 				.catch((err) => {
-					setIsLoading(false);
+					dispatch(updateIsLoading(false));
 					console.error(err);
 				});
 		}
@@ -113,7 +118,7 @@ export default function Controls() {
 					defaultValue={target}
 					placeholder="Choose a target..."
 					onChange={(event) =>
-						event ? setTarget(event.value) : setTarget(null)
+						event ? dispatch(updateTarget(event.value)) : dispatch(updateTarget(null))
 					}
 					options={options}
 					isClearable={true}

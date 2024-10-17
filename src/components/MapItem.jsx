@@ -1,11 +1,13 @@
-import { useContext } from "react";
 import { useMap } from "react-leaflet/hooks";
-import { BusAppContext } from "./BusAppContextProvider";
 import { TileLayer, GeoJSON } from "react-leaflet";
+import { useDispatch, useSelector } from "react-redux";
+import { selectGeoJsonData } from "../store/selectors";
+import { updateMapCenter } from "../features/mapParamSlice";
 
 export default function MapItem() {
 	const map = useMap();
-	const { geoJsonData, setMapCenter } = useContext(BusAppContext);
+	const geoJsonData = useSelector(selectGeoJsonData);
+	const dispatch = useDispatch();
 
 	return (
 		<>
@@ -16,7 +18,7 @@ export default function MapItem() {
 							const coordToJump = geoJsonData.features[0].geometry.coordinates[0]
 							const latLng = [coordToJump[1], coordToJump[0]]
 							map.flyTo(latLng, 9);
-							setMapCenter(latLng);
+							dispatch(updateMapCenter(latLng));
 						}
 					},
 				}}

@@ -1,16 +1,18 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import MapView from "./components/MapView";
 import Controls from "./components/Controls";
 import ErrorModal from "./components/ErrorModal.jsx";
-import BusAppContextProvider, {
-	BusAppContext,
-} from "./components/BusAppContextProvider";
 import { API_BASE_URL, READY } from "./commons.jsx";
+import { useDispatch, useSelector } from "react-redux";
+import { selectErrMsg, selectIsStartingUp } from "./store/selectors.jsx";
+import { updateIsStartingUp } from "./features/appStatusSlice.jsx";
 
 function App() {
-	const [isStartingUp, setIsStartingUp] = useState(true);
+	const isStartingUp = useSelector(selectIsStartingUp);
+	const errMsg = useSelector(selectErrMsg);
+	const dispatch = useDispatch();
+
 	const errorModalRef = useRef();
-	const { errMsg, setErrMsg } = useContext(BusAppContext);
 
 	useEffect(() => {
 		console.log("readying");
@@ -25,7 +27,7 @@ function App() {
 				})
 				.then((response) => {
 					if (response.status === "Ready") {
-						setIsStartingUp(false);
+						dispatch(updateIsStartingUp(false));
 					} else {
 						setTimeout(checkReadyState, 1000);
 					}
@@ -33,8 +35,8 @@ function App() {
 				.catch((error) => {
 					console.log("in error branch");
 					console.log(`err msg logged: ${error.message}`)
-					setErrMsg(error.message || "An error occurred.");
-					setIsStartingUp(false);
+					dispatch(updateErrMsg(error.message || "An error occurred."));
+					dispatch(updateIsStartingUp(false));
 				});
 		};
 
@@ -50,7 +52,7 @@ function App() {
 
 	console.log("App render");
 	return (
-		<BusAppContextProvider>
+		<>
 			<ErrorModal ref={errorModalRef} />
 
 			{isStartingUp && <h1>Starting up...</h1>}
@@ -60,7 +62,7 @@ function App() {
 					<MapView />
 				</div>
 			)}
-		</BusAppContextProvider>
+		</>
 	);
 }
 

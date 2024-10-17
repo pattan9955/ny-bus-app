@@ -1,8 +1,12 @@
 import { useContext } from "react";
 import { BusAppContext } from "./BusAppContextProvider";
+import { useDispatch, useSelector } from "react-redux";
+import { selectSelectedMode } from "../store/selectors";
+import { updateSelectedMode } from "../features/queryParamSlice";
 
 export default function RadioButton({ labelName, value, ...props }) {
-	const { selectedMode, setSelectedMode } = useContext(BusAppContext);
+	const selectedMode = useSelector(selectSelectedMode);
+	const dispatch = useDispatch();
 
 	return (
 		<div {...props}>
@@ -11,7 +15,7 @@ export default function RadioButton({ labelName, value, ...props }) {
 				type="radio"
 				value={value}
 				checked={selectedMode === value}
-				onClick={() => setSelectedMode(value)}
+				onClick={() => dispatch(updateSelectedMode(value))}
 				onChange={() => {}}
 			/>
 		</div>
