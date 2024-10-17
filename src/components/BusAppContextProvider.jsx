@@ -1,15 +1,17 @@
 import { createContext, useState } from "react";
-import { LINE_NAME_MODE, VEH_REF_MODE } from "../commons";
+import { NEW_YORK_COORDS } from "../commons";
 
 export const BusAppContext = createContext({
 	selectedMode: null,
 	options: [],
 	target: "",
 	geoJsonData: null,
+	mapCenter: null,
 	setSelectedMode: () => {},
 	setTarget: () => {},
 	setOptions: () => {},
-	setGeoJsonData: () => {}
+	setGeoJsonData: () => {},
+	setMapCenter: () => {}
 });
 
 export default function BusAppContextProvider({ children }) {
@@ -17,6 +19,7 @@ export default function BusAppContextProvider({ children }) {
 	const [target, setTarget] = useState("");
 	const [options, setOptions] = useState([]);
 	const [geoJsonData, setGeoJsonData] = useState(null);
+	const [mapCenter, setMapCenter] = useState(NEW_YORK_COORDS);
 
 	return (
 		<BusAppContext.Provider
@@ -25,10 +28,12 @@ export default function BusAppContextProvider({ children }) {
 				target: target,
 				options: options,
 				geoJsonData: geoJsonData,
+				mapCenter: mapCenter,
 				setSelectedMode: setSelectedMode,
                 setTarget: setTarget,
 				setOptions: setOptions,
-				setGeoJsonData: setGeoJsonData
+				setGeoJsonData: setGeoJsonData,
+				setMapCenter: setMapCenter
 			}}
 		>
 			{children}

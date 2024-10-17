@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { BusAppContext } from "./BusAppContextProvider";
 
 import RadioButton from "./RadioButton";
@@ -9,20 +9,50 @@ import {
 	VEH_REF,
 	LINE_NAME_MODE,
 	VEH_REF_MODE,
+	BUS_TRIP_BY_VEH_REF,
+	BUS_TRIP_BY_LINE_NAME,
 } from "../commons";
 
 export default function Controls() {
-	const { selectedMode, target, options, setOptions, setTarget } =
-		useContext(BusAppContext);
+	const {
+		selectedMode,
+		target,
+		options,
+		geoJsonData,
+		setOptions,
+		setTarget,
+		setGeoJsonData,
+	} = useContext(BusAppContext);
+
+	const handleQuery = async (event) => {
+		event.preventDefault();
+		let url = `${
+			API_BASE_URL +
+			(selectedMode === VEH_REF_MODE
+				? BUS_TRIP_BY_VEH_REF
+				: BUS_TRIP_BY_LINE_NAME) +
+			target
+		}`;
+
+		try {
+			const response = await fetch(url);
+			if (!response.ok) {
+				throw new Error("Error occurred while fetching query results.");
+			}
+			const respData = await response.json();
+			console.log(respData);
+			setGeoJsonData(respData);
+		} catch (error) {
+			console.log(error);
+		}
+	};
 
 	// Fetch new options based on value of selectedMode
 	useEffect(() => {
+		console.log("Fetching options effect");
 		if (!selectedMode) {
-			console.log("blank sawce");
 			return;
 		} else {
-			console.log("fetching sawce for " + selectedMode);
-
 			const url =
 				selectedMode === VEH_REF_MODE
 					? `${API_BASE_URL + VEH_REF}`
@@ -41,10 +71,12 @@ export default function Controls() {
 					return res.json();
 				})
 				.then((res) => {
-					const opts = res.map((refName) => ({
-						label: refName,
-						value: refName,
-					}));
+					const opts = res
+						.map((refName) => ({
+							label: refName,
+							value: refName,
+						}))
+						.sort((a, b) => a.value.localeCompare(b.value));
 					setOptions([...opts]);
 				})
 				.catch((err) => {
@@ -84,7 +116,10 @@ export default function Controls() {
 						}),
 					}}
 				/>
-				<button className="bg-slate-300 mt-2 px-3 rounded-md">
+				<button
+					className="bg-slate-300 mt-2 px-3 rounded-md"
+					onClick={handleQuery}
+				>
 					Query
 				</button>
 			</form>

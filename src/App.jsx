@@ -1,17 +1,15 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import MapView from "./components/MapView";
 import Controls from "./components/Controls";
 import BusAppContextProvider, {
-	BusAppContext,
 } from "./components/BusAppContextProvider";
 import { API_BASE_URL, READY } from "./commons.jsx";
 
 function App() {
-	const [isStartingUp, setIsStartingUp] = useState(false);
+	const [isStartingUp, setIsStartingUp] = useState(true);
 
 	useEffect(() => {
 		console.log("readying");
-		setIsStartingUp(true);
 
 		const checkReadyState = () => {
 			fetch(`${API_BASE_URL + READY}`)
@@ -37,6 +35,7 @@ function App() {
 		checkReadyState();
 	}, []);
 
+	console.log("App render");
 	return (
 		<BusAppContextProvider>
 			{isStartingUp && <h1>Starting up...</h1>}
