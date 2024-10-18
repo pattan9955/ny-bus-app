@@ -10,7 +10,7 @@ export default function RadioButton({ labelName, value, ...props }) {
 
 	return (
 		<div {...props}>
-			<label className="mr-1 font-mono text-sm">{labelName}</label>
+			<label className={`mr-1 font-mono text-sm ${selectedMode !== value ? "opacity-40" : ""}`}>{labelName}</label>
 			<input
 				className=""
 				type="radio"

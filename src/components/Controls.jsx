@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { Button, ButtonGroup } from "@mui/material";
 
 import RadioButton from "./RadioButton";
 import Select from "react-select";
@@ -12,11 +13,19 @@ import {
 	BUS_TRIP_BY_LINE_NAME,
 } from "../commons";
 import { useDispatch, useSelector } from "react-redux";
-import { selectIsLoading, selectOptions, selectSelectedMode, selectTarget } from "../store/selectors";
-import { updateOptions, updateSelectedMode, updateTarget } from "../features/queryParamSlice";
+import {
+	selectIsLoading,
+	selectOptions,
+	selectSelectedMode,
+	selectTarget,
+} from "../store/selectors";
+import {
+	updateOptions,
+	updateSelectedMode,
+	updateTarget,
+} from "../features/queryParamSlice";
 import { updateGeoJsonData } from "../features/mapParamSlice";
 import { updateErrMsg, updateIsLoading } from "../features/appStatusSlice";
-
 
 export default function Controls() {
 	const selectedMode = useSelector(selectSelectedMode);
@@ -48,7 +57,6 @@ export default function Controls() {
 
 			dispatch(updateGeoJsonData(respData));
 			dispatch(updateIsLoading(false));
-
 		} catch (error) {
 			console.log(error);
 			dispatch(updateErrMsg("An error occurred while fetching results."));
@@ -93,35 +101,49 @@ export default function Controls() {
 				.catch((error) => {
 					dispatch(updateIsLoading(false));
 					dispatch(updateSelectedMode(null));
-					dispatch(updateErrMsg("An error occurred while fetching options."));
+					dispatch(
+						updateErrMsg(
+							"An error occurred while fetching options."
+						)
+					);
 					console.error(error);
 				});
 		}
 	}, [selectedMode]);
+
+	const handleButtonClick = (value) => {
+		dispatch(updateSelectedMode(value));
+	};
 
 	console.log("controls rendered");
 
 	return (
 		<div className="pb-10 mx-auto absolute top-5 left-14 z-1000 font-mono">
 			<form className="w-auto h-full bg-slate-400/75 px-5 py-3 rounded-md">
-				<div className="flex flex-row">
-					<RadioButton
-						className="mx-2 font-light"
-						labelName="By Vehicle Reference"
-						value={VEH_REF_MODE}
-					/>
-					<RadioButton
-						className="mx-2 font-light"
-						labelName="By Line Name"
-						value={LINE_NAME_MODE}
-					/>
-				</div>
+				<ButtonGroup>
+					<Button
+						size="small"
+						variant={`${selectedMode === VEH_REF_MODE ? "contained" : "outlined"}`}
+						onClick={() => handleButtonClick(VEH_REF_MODE)}
+					>
+						By Vehicle Reference
+					</Button>
+					<Button
+						size="small"
+						variant={`${selectedMode === LINE_NAME_MODE ? "contained" : "outlined"}`}
+						onClick={() => handleButtonClick(LINE_NAME_MODE)}
+					>
+						By Line Name
+					</Button>
+				</ButtonGroup>
 				<Select
-					className="w-full h-auto text-sm"
+					className="w-full h-auto text-sm my-3"
 					defaultValue={target}
 					placeholder="Choose a target..."
 					onChange={(event) =>
-						event ? dispatch(updateTarget(event.value)) : dispatch(updateTarget(null))
+						event
+							? dispatch(updateTarget(event.value))
+							: dispatch(updateTarget(null))
 					}
 					options={options}
 					isClearable={true}
@@ -133,12 +155,9 @@ export default function Controls() {
 						}),
 					}}
 				/>
-				<button
-					className="bg-blue-700 text-neutral-300 mt-2 px-3 py-1 rounded-md text-sm hover:bg-blue-600 hover:text-neutral-200 justify-end"
-					onClick={handleQuery}
-				>
+				<Button size="small" variant="contained" onClick={handleQuery}>
 					Query
-				</button>
+				</Button>
 			</form>
 		</div>
 	);
