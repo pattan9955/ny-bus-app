@@ -12,7 +12,7 @@ const MapView = () => {
 	const mapCenter = useSelector(selectMapCenter);
 	
 	return (
-		<div className="flex-grow">
+		<div className="w-full h-full">
 			<MapContainer
 				key={JSON.stringify(geoJsonData)}
 				center={mapCenter}

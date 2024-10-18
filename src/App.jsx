@@ -6,6 +6,7 @@ import { API_BASE_URL, READY } from "./commons.jsx";
 import { useDispatch, useSelector } from "react-redux";
 import { selectErrMsg, selectIsStartingUp } from "./store/selectors.jsx";
 import { updateIsStartingUp } from "./features/appStatusSlice.jsx";
+import StartUpPage from "./components/StartUpPage.jsx";
 
 function App() {
 	const isStartingUp = useSelector(selectIsStartingUp);
@@ -55,9 +56,9 @@ function App() {
 		<>
 			<ErrorModal ref={errorModalRef} />
 
-			{isStartingUp && <h1>Starting up...</h1>}
+			{isStartingUp && <StartUpPage />}
 			{!isStartingUp && (
-				<div className="flex flex-col w-svh h-svh">
+				<div className="w-svh h-svh">
 					<Controls />
 					<MapView />
 				</div>

@@ -10,8 +10,9 @@ export default function RadioButton({ labelName, value, ...props }) {
 
 	return (
 		<div {...props}>
-			<label className="mr-1">{labelName}</label>
+			<label className="mr-1 font-mono text-sm">{labelName}</label>
 			<input
+				className=""
 				type="radio"
 				value={value}
 				checked={selectedMode === value}

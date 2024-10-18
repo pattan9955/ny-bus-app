@@ -99,22 +99,22 @@ export default function Controls() {
 	console.log("controls rendered");
 
 	return (
-		<div className="my-9 pb-10 mx-auto">
-			<form className="w-full h-full bg-slate-400 px-5 py-3 rounded-md">
+		<div className="pb-10 mx-auto absolute top-5 left-14 z-1000 font-mono">
+			<form className="w-auto h-full bg-slate-400/75 px-5 py-3 rounded-md">
 				<div className="flex flex-row">
 					<RadioButton
-						className="mx-2"
+						className="mx-2 font-light"
 						labelName="By Vehicle Reference"
 						value={VEH_REF_MODE}
 					/>
 					<RadioButton
-						className="mx-2"
+						className="mx-2 font-light"
 						labelName="By Line Name"
 						value={LINE_NAME_MODE}
 					/>
 				</div>
 				<Select
-					className="w-full"
+					className="w-full h-auto text-sm"
 					defaultValue={target}
 					placeholder="Choose a target..."
 					onChange={(event) =>
@@ -131,7 +131,7 @@ export default function Controls() {
 					}}
 				/>
 				<button
-					className="bg-slate-300 mt-2 px-3 rounded-md"
+					className="bg-slate-300 text-neutral-900 mt-2 px-3 py-1 rounded-md text-sm hover:bg-slate-200"
 					onClick={handleQuery}
 				>
 					Query
