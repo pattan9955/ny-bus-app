@@ -51,7 +51,6 @@ export default function Controls() {
 
 		} catch (error) {
 			console.log(error);
-			// dispatch(updateErrMsg(error.message));
 			dispatch(updateErrMsg("An error occurred while fetching results."));
 			dispatch(updateIsLoading(false));
 		}
@@ -93,7 +92,6 @@ export default function Controls() {
 				})
 				.catch((error) => {
 					dispatch(updateIsLoading(false));
-					// dispatch(updateErrMsg(error.message));
 					dispatch(updateSelectedMode(null));
 					dispatch(updateErrMsg("An error occurred while fetching options."));
 					console.error(error);
@@ -136,7 +134,7 @@ export default function Controls() {
 					}}
 				/>
 				<button
-					className="bg-slate-300 text-neutral-900 mt-2 px-3 py-1 rounded-md text-sm hover:bg-slate-200"
+					className="bg-blue-700 text-neutral-300 mt-2 px-3 py-1 rounded-md text-sm hover:bg-blue-600 hover:text-neutral-200 justify-end"
 					onClick={handleQuery}
 				>
 					Query
