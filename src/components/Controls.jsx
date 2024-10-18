@@ -13,7 +13,7 @@ import {
 } from "../commons";
 import { useDispatch, useSelector } from "react-redux";
 import { selectIsLoading, selectOptions, selectSelectedMode, selectTarget } from "../store/selectors";
-import { updateOptions, updateTarget } from "../features/queryParamSlice";
+import { updateOptions, updateSelectedMode, updateTarget } from "../features/queryParamSlice";
 import { updateGeoJsonData } from "../features/mapParamSlice";
 import { updateErrMsg, updateIsLoading } from "../features/appStatusSlice";
 
@@ -51,6 +51,8 @@ export default function Controls() {
 
 		} catch (error) {
 			console.log(error);
+			// dispatch(updateErrMsg(error.message));
+			dispatch(updateErrMsg("An error occurred while fetching results."));
 			dispatch(updateIsLoading(false));
 		}
 	};
@@ -89,9 +91,12 @@ export default function Controls() {
 					dispatch(updateOptions(opts));
 					dispatch(updateIsLoading(false));
 				})
-				.catch((err) => {
+				.catch((error) => {
 					dispatch(updateIsLoading(false));
-					console.error(err);
+					// dispatch(updateErrMsg(error.message));
+					dispatch(updateSelectedMode(null));
+					dispatch(updateErrMsg("An error occurred while fetching options."));
+					console.error(error);
 				});
 		}
 	}, [selectedMode]);

@@ -5,7 +5,7 @@ import ErrorModal from "./components/ErrorModal.jsx";
 import { API_BASE_URL, READY } from "./commons.jsx";
 import { useDispatch, useSelector } from "react-redux";
 import { selectErrMsg, selectIsStartingUp } from "./store/selectors.jsx";
-import { updateIsStartingUp } from "./features/appStatusSlice.jsx";
+import { updateErrMsg, updateIsStartingUp } from "./features/appStatusSlice.jsx";
 import StartUpPage from "./components/StartUpPage.jsx";
 
 function App() {
@@ -54,7 +54,7 @@ function App() {
 	console.log("App render");
 	return (
 		<>
-			<ErrorModal ref={errorModalRef} />
+			{errMsg && <ErrorModal ref={errorModalRef} />}
 
 			{isStartingUp && <StartUpPage />}
 			{!isStartingUp && (
