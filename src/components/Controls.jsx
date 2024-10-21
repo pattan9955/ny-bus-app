@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { Button, ButtonGroup } from "@mui/material";
 
-import RadioButton from "./RadioButton";
 import Select from "react-select";
 import {
 	API_BASE_URL,
@@ -26,6 +25,17 @@ import {
 } from "../features/queryParamSlice";
 import { updateGeoJsonData } from "../features/mapParamSlice";
 import { updateErrMsg, updateIsLoading } from "../features/appStatusSlice";
+import { makeStyles } from "@mui/styles";
+
+// const useStyles = makeStyles((theme) => ({
+// 	button: {
+// 		[theme.breakpoints.down("sm")]: {
+// 			minWidth: 32,
+// 			paddingLeft: 8,
+// 			paddingRight: 8,
+// 		},
+// 	}
+// }));
 
 export default function Controls() {
 	const selectedMode = useSelector(selectSelectedMode);
@@ -119,25 +129,35 @@ export default function Controls() {
 
 	return (
 		<div className="pb-10 mx-auto absolute top-5 left-14 z-1000 font-mono">
-			<form className="w-auto h-full bg-slate-400/75 px-5 py-3 rounded-md">
-				<ButtonGroup>
+			<form className="w-3/4 h-full bg-slate-400/75 px-5 py-3 rounded-md sm:w-auto">
+				<ButtonGroup size="small">
 					<Button
+						sx={{ fontSize: { sm: "0.75rem", xs: "0.5rem" } }}
 						size="small"
-						variant={`${selectedMode === VEH_REF_MODE ? "contained" : "outlined"}`}
+						variant={`${
+							selectedMode === VEH_REF_MODE
+								? "contained"
+								: "outlined"
+						}`}
 						onClick={() => handleButtonClick(VEH_REF_MODE)}
 					>
 						By Vehicle Reference
 					</Button>
 					<Button
+						sx={{ fontSize: { sm: "0.75rem", xs: "0.5rem" } }}
 						size="small"
-						variant={`${selectedMode === LINE_NAME_MODE ? "contained" : "outlined"}`}
+						variant={`${
+							selectedMode === LINE_NAME_MODE
+								? "contained"
+								: "outlined"
+						}`}
 						onClick={() => handleButtonClick(LINE_NAME_MODE)}
 					>
 						By Line Name
 					</Button>
 				</ButtonGroup>
 				<Select
-					className="w-full h-auto text-sm my-3"
+					className="w-full h-auto text-xs my-3 sm:text-sm"
 					defaultValue={target}
 					placeholder="Choose a target..."
 					onChange={(event) =>
@@ -155,7 +175,12 @@ export default function Controls() {
 						}),
 					}}
 				/>
-				<Button size="small" variant="contained" onClick={handleQuery}>
+				<Button
+					size="small"
+					variant="contained"
+					onClick={handleQuery}
+					sx={{ fontSize: { sm: "0.75rem", xs: "0.5rem" } }}
+				>
 					Query
 				</Button>
 			</form>
