@@ -160,11 +160,16 @@ export default function Controls() {
 					className="w-full h-auto text-xs my-3 sm:text-sm"
 					defaultValue={target}
 					placeholder="Choose a target..."
-					onChange={(event) =>
+					onInputChange={(event) => {
 						event
-							? dispatch(updateTarget(event.value))
+							? dispatch(updateTarget(event))
 							: dispatch(updateTarget(null))
-					}
+					}}
+					onKeyDown={(event) => {
+						if (event.key === "Enter") {
+							handleQuery(event);
+						}
+					}}
 					options={options}
 					isClearable={true}
 					isLoading={isLoading}
