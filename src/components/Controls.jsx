@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Button, ButtonGroup } from "@mui/material";
 
-import Select from "react-select";
+import CreatableSelect from "react-select/creatable";
 import {
 	API_BASE_URL,
 	LINE_NAMES,
@@ -25,17 +25,6 @@ import {
 } from "../features/queryParamSlice";
 import { updateGeoJsonData } from "../features/mapParamSlice";
 import { updateErrMsg, updateIsLoading } from "../features/appStatusSlice";
-import { makeStyles } from "@mui/styles";
-
-// const useStyles = makeStyles((theme) => ({
-// 	button: {
-// 		[theme.breakpoints.down("sm")]: {
-// 			minWidth: 32,
-// 			paddingLeft: 8,
-// 			paddingRight: 8,
-// 		},
-// 	}
-// }));
 
 export default function Controls() {
 	const selectedMode = useSelector(selectSelectedMode);
@@ -129,7 +118,7 @@ export default function Controls() {
 
 	return (
 		<div className="pb-10 mx-auto absolute top-5 left-14 z-1000 font-mono">
-			<form className="w-3/4 h-full bg-slate-400/75 px-5 py-3 rounded-md sm:w-auto">
+			<form className="w-3/4 h-full bg-slate-400/75 px-5 py-3 rounded-md sm:w-auto" onSubmit={handleQuery}>
 				<ButtonGroup size="small">
 					<Button
 						sx={{ fontSize: { sm: "0.75rem", xs: "0.5rem" } }}
@@ -156,23 +145,22 @@ export default function Controls() {
 						By Line Name
 					</Button>
 				</ButtonGroup>
-				<Select
+				<CreatableSelect
 					className="w-full h-auto text-xs my-3 sm:text-sm"
 					defaultValue={target}
 					placeholder="Choose a target..."
-					onInputChange={(event) => {
+					onChange={(event) => {
 						event
-							? dispatch(updateTarget(event))
-							: dispatch(updateTarget(null))
-					}}
-					onKeyDown={(event) => {
-						if (event.key === "Enter") {
-							handleQuery(event);
-						}
+							? dispatch(updateTarget(event.value))
+							: dispatch(updateTarget(null));
 					}}
 					options={options}
+					closeMenuOnSelect={true}
+					controlShouldRenderValue={true}
 					isClearable={true}
 					isLoading={isLoading}
+					isSearchable={true}
+					formatCreateLabel={(inputVal) => `${inputVal} not found.`}
 					styles={{
 						menu: (baseStyles, state) => ({
 							...baseStyles,
@@ -181,6 +169,7 @@ export default function Controls() {
 					}}
 				/>
 				<Button
+					type="submit"
 					size="small"
 					variant="contained"
 					onClick={handleQuery}
